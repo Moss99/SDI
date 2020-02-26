@@ -22,6 +22,7 @@ namespace Image_Annotator {
 		MyForm(void)
 		{
 			InitializeComponent();
+
 			//
 			//TODO: Add the constructor code here
 			//
@@ -38,24 +39,25 @@ namespace Image_Annotator {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::Button^  button1;
+	private: System::Windows::Forms::Button^ button1;
 	protected:
-	private: System::Windows::Forms::ListBox^  listBox1;
-	private: System::Windows::Forms::Label^  label1;
+	private: System::Windows::Forms::ListBox^ listBox1;
+	private: System::Windows::Forms::Label^ label1;
 
-	private: System::Windows::Forms::Label^  label2;
-	private: System::Windows::Forms::Button^  button2;
-	private: System::Windows::Forms::TextBox^  textBox1;
-	private: System::Windows::Forms::TextBox^  textBox2;
-	private: System::Windows::Forms::TextBox^  textBox3;
-	private: System::Windows::Forms::Button^  button3;
-	private: System::Windows::Forms::Label^  label3;
-	private: System::Windows::Forms::Button^  button4;
-	private: System::Windows::Forms::PictureBox^  pictureBox1;
-	private: System::Windows::Forms::FolderBrowserDialog^ openFileDialog1;
-
-	private: System::Windows::Forms::ListBox^ listBox2;
+	private: System::Windows::Forms::Label^ label2;
+	private: System::Windows::Forms::Button^ button2;
+	private: System::Windows::Forms::TextBox^ textBox1;
+	private: System::Windows::Forms::TextBox^ textBox2;
+	private: System::Windows::Forms::TextBox^ textBox3;
+	private: System::Windows::Forms::Button^ button3;
+	private: System::Windows::Forms::Label^ label3;
+	private: System::Windows::Forms::Button^ button4;
+	private: System::Windows::Forms::PictureBox^ pictureBox1;
+	private: System::Windows::Forms::SaveFileDialog^ saveFileDialog1;
+	private: System::Windows::Forms::Timer^ timer1;
 	private: System::ComponentModel::IContainer^ components;
+	private: System::Windows::Forms::FolderBrowserDialog^ openFileDialog1;
+	private: System::Windows::Forms::ListBox^ listBox2;
 
 
 
@@ -73,6 +75,7 @@ namespace Image_Annotator {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			this->components = (gcnew System::ComponentModel::Container());
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(MyForm::typeid));
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->listBox1 = (gcnew System::Windows::Forms::ListBox());
@@ -86,6 +89,8 @@ namespace Image_Annotator {
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->button4 = (gcnew System::Windows::Forms::Button());
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
+			this->saveFileDialog1 = (gcnew System::Windows::Forms::SaveFileDialog());
+			this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
 			this->openFileDialog1 = (gcnew System::Windows::Forms::FolderBrowserDialog());
 			this->listBox2 = (gcnew System::Windows::Forms::ListBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
@@ -193,6 +198,7 @@ namespace Image_Annotator {
 			this->button4->TabIndex = 11;
 			this->button4->Text = L"Save Labelled Image";
 			this->button4->UseVisualStyleBackColor = true;
+			this->button4->Click += gcnew System::EventHandler(this, &MyForm::button4_Click);
 			// 
 			// pictureBox1
 			// 
@@ -203,6 +209,14 @@ namespace Image_Annotator {
 			this->pictureBox1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
 			this->pictureBox1->TabIndex = 12;
 			this->pictureBox1->TabStop = false;
+			this->pictureBox1->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &MyForm::pictureBox1_Paint);
+			this->pictureBox1->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &MyForm::pictureBox1_MouseDown);
+			this->pictureBox1->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &MyForm::pictureBox1_MouseUp);
+			//
+			// Timer1
+			//
+			this->timer1->Interval = 10;  /* 100 millisec */
+			this->timer1->Tick += gcnew System::EventHandler(this, &MyForm::TimerCallback);
 			// 
 			// openFileDialog1
 			// 
@@ -245,21 +259,46 @@ namespace Image_Annotator {
 		}
 #pragma endregion
 
+		void shapePoint1();
+		void shapePoint2();
+		void paintShapes(PaintEventArgs^ e);
+		void savePic();
 
-private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
-	//Browse for image folder
-	listBox2->Items->Clear();
-	imageFolder imageFolder;
-	openFileDialog1->ShowDialog();
-	System::String^ filePathS = openFileDialog1->SelectedPath;
-	textBox1->Text = filePathS;
-	std::vector <std::string> fileNames = imageFolder.loadImages(msclr::interop::marshal_as<std::string>(filePathS));
-	for (int i = 0; i < fileNames.size(); i++) {
-		listBox2->Items->Add(gcnew String(fileNames[i].c_str()));
+	private: System::Void pictureBox1_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
+		paintShapes(e);
 	}
-}
-private: System::Void listBox2_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
-	//Show selected image
-}
-};
+
+	private: void TimerCallback(Object^ sender, EventArgs^ e) {
+		pictureBox1->Invalidate();
+	}
+
+	private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
+		savePic();
+	}
+
+	private: System::Void pictureBox1_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
+		shapePoint1();
+	}
+
+	private: System::Void pictureBox1_MouseUp(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
+		shapePoint2();
+	}
+
+	private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+		//Browse for image folder
+		listBox2->Items->Clear();
+		imageFolder imageFolder;
+		openFileDialog1->ShowDialog();
+		System::String^ filePathS = openFileDialog1->SelectedPath;
+		textBox1->Text = filePathS;
+		std::vector <std::string> fileNames = imageFolder.loadImages(msclr::interop::marshal_as<std::string>(filePathS));
+		for (int i = 0; i < fileNames.size(); i++) {
+			listBox2->Items->Add(gcnew String(fileNames[i].c_str()));
+		}
+	}
+	private: System::Void listBox2_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
+		//Show selected image
+	}
+
+	};
 }
