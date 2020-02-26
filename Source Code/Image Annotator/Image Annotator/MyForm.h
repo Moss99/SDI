@@ -1,3 +1,7 @@
+#include <string>
+#include <msclr\marshal_cppstd.h>
+#include <vector>
+#include "imageFolder.h"
 #pragma once
 
 namespace Image_Annotator {
@@ -38,7 +42,7 @@ namespace Image_Annotator {
 	protected:
 	private: System::Windows::Forms::ListBox^  listBox1;
 	private: System::Windows::Forms::Label^  label1;
-	private: System::Windows::Forms::ListBox^  listBox2;
+
 	private: System::Windows::Forms::Label^  label2;
 	private: System::Windows::Forms::Button^  button2;
 	private: System::Windows::Forms::TextBox^  textBox1;
@@ -48,6 +52,11 @@ namespace Image_Annotator {
 	private: System::Windows::Forms::Label^  label3;
 	private: System::Windows::Forms::Button^  button4;
 	private: System::Windows::Forms::PictureBox^  pictureBox1;
+	private: System::Windows::Forms::FolderBrowserDialog^ openFileDialog1;
+
+	private: System::Windows::Forms::ListBox^ listBox2;
+	private: System::ComponentModel::IContainer^ components;
+
 
 
 
@@ -55,7 +64,7 @@ namespace Image_Annotator {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -64,11 +73,10 @@ namespace Image_Annotator {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(MyForm::typeid));
+			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(MyForm::typeid));
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->listBox1 = (gcnew System::Windows::Forms::ListBox());
 			this->label1 = (gcnew System::Windows::Forms::Label());
-			this->listBox2 = (gcnew System::Windows::Forms::ListBox());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
@@ -78,6 +86,8 @@ namespace Image_Annotator {
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->button4 = (gcnew System::Windows::Forms::Button());
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
+			this->openFileDialog1 = (gcnew System::Windows::Forms::FolderBrowserDialog());
+			this->listBox2 = (gcnew System::Windows::Forms::ListBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -93,7 +103,6 @@ namespace Image_Annotator {
 			// listBox1
 			// 
 			this->listBox1->FormattingEnabled = true;
-			this->listBox1->Items->AddRange(gcnew cli::array< System::Object^  >(3) { L"Tree", L"Sun", L"Cloud" });
 			this->listBox1->Location = System::Drawing::Point(791, 511);
 			this->listBox1->Name = L"listBox1";
 			this->listBox1->ScrollAlwaysVisible = true;
@@ -111,16 +120,6 @@ namespace Image_Annotator {
 			this->label1->Size = System::Drawing::Size(43, 13);
 			this->label1->TabIndex = 2;
 			this->label1->Text = L"Classes";
-			// 
-			// listBox2
-			// 
-			this->listBox2->FormattingEnabled = true;
-			this->listBox2->Items->AddRange(gcnew cli::array< System::Object^  >(3) { L"trees.png", L"urban_landscape.jpg", L"nature.jpg" });
-			this->listBox2->Location = System::Drawing::Point(356, 511);
-			this->listBox2->Name = L"listBox2";
-			this->listBox2->ScrollAlwaysVisible = true;
-			this->listBox2->Size = System::Drawing::Size(416, 121);
-			this->listBox2->TabIndex = 3;
 			// 
 			// label2
 			// 
@@ -142,6 +141,7 @@ namespace Image_Annotator {
 			this->button2->TabIndex = 5;
 			this->button2->Text = L"Browse";
 			this->button2->UseVisualStyleBackColor = true;
+			this->button2->Click += gcnew System::EventHandler(this, &MyForm::button2_Click);
 			// 
 			// textBox1
 			// 
@@ -204,11 +204,25 @@ namespace Image_Annotator {
 			this->pictureBox1->TabIndex = 12;
 			this->pictureBox1->TabStop = false;
 			// 
+			// openFileDialog1
+			// 
+			this->openFileDialog1->ShowNewFolderButton = false;
+			// 
+			// listBox2
+			// 
+			this->listBox2->FormattingEnabled = true;
+			this->listBox2->Location = System::Drawing::Point(356, 511);
+			this->listBox2->Name = L"listBox2";
+			this->listBox2->Size = System::Drawing::Size(422, 121);
+			this->listBox2->TabIndex = 13;
+			this->listBox2->SelectedIndexChanged += gcnew System::EventHandler(this, &MyForm::listBox2_SelectedIndexChanged);
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(1220, 681);
+			this->Controls->Add(this->listBox2);
 			this->Controls->Add(this->pictureBox1);
 			this->Controls->Add(this->button4);
 			this->Controls->Add(this->textBox3);
@@ -218,7 +232,6 @@ namespace Image_Annotator {
 			this->Controls->Add(this->textBox1);
 			this->Controls->Add(this->button2);
 			this->Controls->Add(this->label2);
-			this->Controls->Add(this->listBox2);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->listBox1);
 			this->Controls->Add(this->button1);
@@ -233,7 +246,20 @@ namespace Image_Annotator {
 #pragma endregion
 
 
-
-
+private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+	//Browse for image folder
+	listBox2->Items->Clear();
+	imageFolder imageFolder;
+	openFileDialog1->ShowDialog();
+	System::String^ filePathS = openFileDialog1->SelectedPath;
+	textBox1->Text = filePathS;
+	std::vector <std::string> fileNames = imageFolder.loadImages(msclr::interop::marshal_as<std::string>(filePathS));
+	for (int i = 0; i < fileNames.size(); i++) {
+		listBox2->Items->Add(gcnew String(fileNames[i].c_str()));
+	}
+}
+private: System::Void listBox2_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
+	//Show selected image
+}
 };
 }

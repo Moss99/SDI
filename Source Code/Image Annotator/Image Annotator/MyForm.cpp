@@ -1,4 +1,5 @@
 #include "MyForm.h"
+#include <iostream>
 
 using namespace System;
 using namespace System::Windows::Forms;
@@ -13,3 +14,5 @@ void Main(array<String^>^ args)
 	Image_Annotator::MyForm form;
 	Application::Run(%form);
 }
+
+
