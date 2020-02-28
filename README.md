@@ -17,7 +17,10 @@ Content added to the repository must meet a professional standard set in this co
 If any of contributors to the repository fail to meet any of the above standards this should be forwarded to the project manager.
 The manager will review the incident and if they feel it necessary may talk to a staff member.
 
-## Technical Requirements
+## Enhancement Requirements
 When submitting any documents to the repository, you should ensure you are submitting high quality code or documentation.
 
 If you run into any issues you cannot deal with yourself, you should contact the team member associated with the task or the project manager on slack.
+
+### Bug Reporting
+If any bugs are encountered in the program, a new task should be opened on trello and the group should be informed the slack server.
