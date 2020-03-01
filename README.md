@@ -24,3 +24,6 @@ If you run into any issues you cannot deal with yourself, you should contact the
 
 ### Bug Reporting
 If any bugs are encountered in the program, a new task should be opened on trello and the group should be informed the slack server.
+
+## Continous Integration
+Jenkins will integrate with the repository and perform automatic tests on the code after new commits.
