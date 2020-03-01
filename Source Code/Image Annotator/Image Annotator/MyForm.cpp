@@ -24,7 +24,6 @@ Point picBoxLoc;
 //std::vector<Drawing::Rectangle> rectangles;
 
 
-
 void MyForm::shapePoint1()
 {
 	timer1->Enabled = true;
@@ -75,5 +74,17 @@ void Image_Annotator::MyForm::savePic()
 		System::IO::FileStream^ fs = (System::IO::FileStream^)saveFileDialog1->OpenFile();
 		bmp->Save(fs, Drawing::Imaging::ImageFormat::Bmp);
 		fs->Close();
+	}
+}
+
+void MyForm::loadImages() {
+	listBox2->Items->Clear();
+	imageFolder imageFolder;
+	openFileDialog1->ShowDialog();
+	System::String^ filePathS = openFileDialog1->SelectedPath;
+	textBox1->Text = filePathS;
+	std::vector <std::string> fileNames = imageFolder.loadImages(msclr::interop::marshal_as<std::string>(filePathS));
+	for (int i = 0; i < fileNames.size(); i++) {
+		listBox2->Items->Add(gcnew String(fileNames[i].c_str()));
 	}
 }

@@ -263,6 +263,7 @@ namespace Image_Annotator {
 		void shapePoint2();
 		void paintShapes(PaintEventArgs^ e);
 		void savePic();
+		void loadImages();
 
 	private: System::Void pictureBox1_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
 		paintShapes(e);
@@ -285,16 +286,7 @@ namespace Image_Annotator {
 	}
 
 	private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
-		//Browse for image folder
-		listBox2->Items->Clear();
-		imageFolder imageFolder;
-		openFileDialog1->ShowDialog();
-		System::String^ filePathS = openFileDialog1->SelectedPath;
-		textBox1->Text = filePathS;
-		std::vector <std::string> fileNames = imageFolder.loadImages(msclr::interop::marshal_as<std::string>(filePathS));
-		for (int i = 0; i < fileNames.size(); i++) {
-			listBox2->Items->Add(gcnew String(fileNames[i].c_str()));
-		}
+		loadImages();
 	}
 	private: System::Void listBox2_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 		//Show selected image
