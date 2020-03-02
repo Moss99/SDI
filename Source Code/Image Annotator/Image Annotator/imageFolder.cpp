@@ -27,7 +27,9 @@ std::vector <std::string> imageFolder::loadImages(std::string filepath) {
 
 bool imageFolder::validImage(std::string imageName) {
 	bool valid = false;
-	std::string ext = imageName.substr((imageName.length() - 4),3);
+	int extPos = 4;
+	int extLen = 3;
+	std::string ext = imageName.substr((imageName.length() - extPos),extLen);
 	if (ext == "png" || ext == "jpg") {
 		valid = true;
 	}

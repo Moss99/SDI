@@ -1,4 +1,5 @@
 #include "MyForm.h"
+#include "Shape.h"
 #include <iostream>
 #include <vector>
 #include <initializer_list>
@@ -10,8 +11,7 @@ using namespace Image_Annotator;
 using namespace System::Collections::Generic;
 
 [STAThread]
-void Main(array<String^>^ args)
-{
+void Main(array<String^>^ args) {
 	Application::EnableVisualStyles();
 	Application::SetCompatibleTextRenderingDefault(false);
 
@@ -25,8 +25,7 @@ Point picBoxLoc;
 
 
 
-void MyForm::shapePoint1()
-{
+void MyForm::shapePoint1() {
 	timer1->Enabled = true;
 	shapeStartPos = PointToClient(System::Windows::Forms::Cursor::Position);
 	picBoxLoc = pictureBox1->Location;
@@ -34,13 +33,11 @@ void MyForm::shapePoint1()
 	shapeStartPos.Y = shapeStartPos.Y - picBoxLoc.Y;;
 }
 
-void MyForm::shapePoint2()
-{
+void MyForm::shapePoint2() {
 	timer1->Enabled = false;
 }
 
-void MyForm::paintShapes(PaintEventArgs^ e)
-{
+void MyForm::paintShapes(PaintEventArgs^ e) {
 	Graphics^ g = e->Graphics;
 
 	Color transYellow = Color::FromArgb(100, Color::Yellow);
@@ -62,8 +59,7 @@ void MyForm::paintShapes(PaintEventArgs^ e)
 	}
 }
 
-void Image_Annotator::MyForm::savePic()
-{
+void Image_Annotator::MyForm::savePic() {
 	saveFileDialog1->Filter = "JPeg Image|*.jpg|Bitmap Image|*.bmp";
 	saveFileDialog1->Title = "Save Image File";
 	saveFileDialog1->ShowDialog();
@@ -75,5 +71,17 @@ void Image_Annotator::MyForm::savePic()
 		System::IO::FileStream^ fs = (System::IO::FileStream^)saveFileDialog1->OpenFile();
 		bmp->Save(fs, Drawing::Imaging::ImageFormat::Bmp);
 		fs->Close();
+	}
+}
+
+void MyForm::loadImages() {
+	listBox2->Items->Clear();
+	imageFolder imageFolder;
+	openFileDialog1->ShowDialog();
+	System::String^ filePathS = openFileDialog1->SelectedPath;
+	textBox1->Text = filePathS;
+	std::vector <std::string> fileNames = imageFolder.loadImages(msclr::interop::marshal_as<std::string>(filePathS));
+	for (int i = 0; i < fileNames.size(); i++) {
+		listBox2->Items->Add(gcnew String(fileNames[i].c_str()));
 	}
 }

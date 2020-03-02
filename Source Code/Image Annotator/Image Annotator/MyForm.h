@@ -14,14 +14,14 @@ namespace Image_Annotator {
 	using namespace System::Drawing;
 
 	/// <summary>
-	/// Summary for MyForm
+	/// The Main screen used to annotate pictures.
 	/// </summary>
 	public ref class MyForm : public System::Windows::Forms::Form
 	{
 	public:
 		MyForm(void)
 		{
-			InitializeComponent();
+			InitializeComponent(); /// Creates and initializes all the components on the form. 
 
 			//
 			//TODO: Add the constructor code here
@@ -29,9 +29,7 @@ namespace Image_Annotator {
 		}
 
 	protected:
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
+		// Clean up any resources being used.
 		~MyForm()
 		{
 			if (components)
@@ -57,6 +55,7 @@ namespace Image_Annotator {
 	private: System::Windows::Forms::Timer^ timer1;
 	private: System::ComponentModel::IContainer^ components;
 	private: System::Windows::Forms::FolderBrowserDialog^ openFileDialog1;
+	private: System::Windows::Forms::PictureBox^ pictureBox2;
 	private: System::Windows::Forms::ListBox^ listBox2;
 
 
@@ -93,7 +92,9 @@ namespace Image_Annotator {
 			this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
 			this->openFileDialog1 = (gcnew System::Windows::Forms::FolderBrowserDialog());
 			this->listBox2 = (gcnew System::Windows::Forms::ListBox());
+			this->pictureBox2 = (gcnew System::Windows::Forms::PictureBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// button1
@@ -212,10 +213,10 @@ namespace Image_Annotator {
 			this->pictureBox1->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &MyForm::pictureBox1_Paint);
 			this->pictureBox1->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &MyForm::pictureBox1_MouseDown);
 			this->pictureBox1->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &MyForm::pictureBox1_MouseUp);
-			//
-			// Timer1
-			//
-			this->timer1->Interval = 10;  /* 100 millisec */
+			// 
+			// timer1
+			// 
+			this->timer1->Interval = 10;
 			this->timer1->Tick += gcnew System::EventHandler(this, &MyForm::TimerCallback);
 			// 
 			// openFileDialog1
@@ -231,11 +232,22 @@ namespace Image_Annotator {
 			this->listBox2->TabIndex = 13;
 			this->listBox2->SelectedIndexChanged += gcnew System::EventHandler(this, &MyForm::listBox2_SelectedIndexChanged);
 			// 
+			// pictureBox2
+			// 
+			this->pictureBox2->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox2.Image")));
+			this->pictureBox2->Location = System::Drawing::Point(12, 12);
+			this->pictureBox2->Name = L"pictureBox2";
+			this->pictureBox2->Size = System::Drawing::Size(128, 129);
+			this->pictureBox2->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
+			this->pictureBox2->TabIndex = 14;
+			this->pictureBox2->TabStop = false;
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(1220, 681);
+			this->Controls->Add(this->pictureBox2);
 			this->Controls->Add(this->listBox2);
 			this->Controls->Add(this->pictureBox1);
 			this->Controls->Add(this->button4);
@@ -253,6 +265,7 @@ namespace Image_Annotator {
 			this->Name = L"MyForm";
 			this->Text = L"Image Annotator";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -263,6 +276,7 @@ namespace Image_Annotator {
 		void shapePoint2();
 		void paintShapes(PaintEventArgs^ e);
 		void savePic();
+		void loadImages();
 
 	private: System::Void pictureBox1_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
 		paintShapes(e);
@@ -285,16 +299,7 @@ namespace Image_Annotator {
 	}
 
 	private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
-		//Browse for image folder
-		listBox2->Items->Clear();
-		imageFolder imageFolder;
-		openFileDialog1->ShowDialog();
-		System::String^ filePathS = openFileDialog1->SelectedPath;
-		textBox1->Text = filePathS;
-		std::vector <std::string> fileNames = imageFolder.loadImages(msclr::interop::marshal_as<std::string>(filePathS));
-		for (int i = 0; i < fileNames.size(); i++) {
-			listBox2->Items->Add(gcnew String(fileNames[i].c_str()));
-		}
+		loadImages();
 	}
 	private: System::Void listBox2_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 		//Show selected image
