@@ -22,6 +22,7 @@ void Main(array<String^>^ args) {
 Point shapeStartPos;
 Point picBoxLoc;
 //std::vector<Drawing::Rectangle> rectangles;
+auto rectangles = gcnew List<System::Drawing::Rectangle>();
 
 
 
