@@ -4,6 +4,7 @@
 #include <vector>
 #include <initializer_list>
 #include <iostream>
+#include <exception>
 
 using namespace System;
 using namespace System::Windows::Forms;
@@ -21,6 +22,8 @@ void Main(array<String^>^ args) {
 
 Point shapeStartPos;
 std::vector<int> rectangles;
+std::vector <std::string> imageFileNames;
+std::string folderFilePath;
 
 void MyForm::shapePoint1() {
 	timer1->Enabled = true;
@@ -92,15 +95,29 @@ void Image_Annotator::MyForm::savePic() {
 }
 
 void MyForm::loadImages() {
-	listBox2->Items->Clear();
 	imageFolder imageFolder;
 	openFileDialog1->ShowDialog();
-	System::String^ filePathS = openFileDialog1->SelectedPath;
-	textBox1->Text = filePathS;
-	std::vector <std::string> fileNames = imageFolder.loadImages(msclr::interop::marshal_as<std::string>(filePathS));
-	for (int i = 0; i < fileNames.size(); i++) {
-		listBox2->Items->Add(gcnew String(fileNames[i].c_str()));
+	try {
+		System::String^ filePathS = openFileDialog1->SelectedPath;
+		folderFilePath = msclr::interop::marshal_as<std::string>(filePathS);
+		textBox1->Text = filePathS;
+		imageFileNames = imageFolder.loadImages(folderFilePath);
+		listBox2->Items->Clear();
+		for (int i = 0; i < imageFileNames.size(); i++) {
+			listBox2->Items->Add(gcnew String(imageFileNames[i].c_str()));
+		}
 	}
+	catch (const std::exception & exp) {
+		//catch no folder selected
+	}
+}
+
+void MyForm::setImage() {
+	imageFolder image;
+	int selectedImage = listBox2->SelectedIndex;
+	std::string fullPath = image.fullPath(folderFilePath, imageFileNames[selectedImage]);
+	System::String^ fullPathS = gcnew String(fullPath.c_str());
+	pictureBox1->Image = pictureBox1->Image->FromFile(fullPathS);
 }
 
 

@@ -56,6 +56,8 @@ namespace Image_Annotator {
 	private: System::ComponentModel::IContainer^ components;
 	private: System::Windows::Forms::FolderBrowserDialog^ openFileDialog1;
 	private: System::Windows::Forms::PictureBox^ pictureBox2;
+	private: System::Windows::Forms::Button^ button5;
+
 	private: System::Windows::Forms::ListBox^ listBox2;
 
 
@@ -93,6 +95,7 @@ namespace Image_Annotator {
 			this->openFileDialog1 = (gcnew System::Windows::Forms::FolderBrowserDialog());
 			this->listBox2 = (gcnew System::Windows::Forms::ListBox());
 			this->pictureBox2 = (gcnew System::Windows::Forms::PictureBox());
+			this->button5 = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->BeginInit();
 			this->SuspendLayout();
@@ -112,7 +115,7 @@ namespace Image_Annotator {
 			this->listBox1->Location = System::Drawing::Point(791, 511);
 			this->listBox1->Name = L"listBox1";
 			this->listBox1->ScrollAlwaysVisible = true;
-			this->listBox1->Size = System::Drawing::Size(416, 121);
+			this->listBox1->Size = System::Drawing::Size(417, 121);
 			this->listBox1->TabIndex = 1;
 			// 
 			// label1
@@ -133,7 +136,7 @@ namespace Image_Annotator {
 			this->label2->BackColor = System::Drawing::SystemColors::Control;
 			this->label2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label2->Location = System::Drawing::Point(353, 643);
+			this->label2->Location = System::Drawing::Point(356, 643);
 			this->label2->Name = L"label2";
 			this->label2->Size = System::Drawing::Size(41, 13);
 			this->label2->TabIndex = 4;
@@ -153,26 +156,26 @@ namespace Image_Annotator {
 			// 
 			this->textBox1->Location = System::Drawing::Point(481, 640);
 			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(214, 20);
+			this->textBox1->Size = System::Drawing::Size(297, 20);
 			this->textBox1->TabIndex = 6;
 			// 
 			// textBox2
 			// 
-			this->textBox2->Location = System::Drawing::Point(916, 640);
+			this->textBox2->Location = System::Drawing::Point(918, 640);
 			this->textBox2->Name = L"textBox2";
-			this->textBox2->Size = System::Drawing::Size(214, 20);
+			this->textBox2->Size = System::Drawing::Size(211, 20);
 			this->textBox2->TabIndex = 7;
 			// 
 			// textBox3
 			// 
-			this->textBox3->Location = System::Drawing::Point(136, 582);
+			this->textBox3->Location = System::Drawing::Point(162, 582);
 			this->textBox3->Name = L"textBox3";
-			this->textBox3->Size = System::Drawing::Size(214, 20);
+			this->textBox3->Size = System::Drawing::Size(188, 20);
 			this->textBox3->TabIndex = 10;
 			// 
 			// button3
 			// 
-			this->button3->Location = System::Drawing::Point(55, 580);
+			this->button3->Location = System::Drawing::Point(81, 580);
 			this->button3->Name = L"button3";
 			this->button3->Size = System::Drawing::Size(75, 23);
 			this->button3->TabIndex = 9;
@@ -185,19 +188,19 @@ namespace Image_Annotator {
 			this->label3->BackColor = System::Drawing::SystemColors::Control;
 			this->label3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label3->Location = System::Drawing::Point(8, 585);
+			this->label3->Location = System::Drawing::Point(12, 585);
 			this->label3->Name = L"label3";
-			this->label3->Size = System::Drawing::Size(43, 13);
+			this->label3->Size = System::Drawing::Size(63, 13);
 			this->label3->TabIndex = 8;
-			this->label3->Text = L"Shapes";
+			this->label3->Text = L"Annotations";
 			// 
 			// button4
 			// 
 			this->button4->Location = System::Drawing::Point(11, 618);
 			this->button4->Name = L"button4";
-			this->button4->Size = System::Drawing::Size(191, 43);
+			this->button4->Size = System::Drawing::Size(339, 43);
 			this->button4->TabIndex = 11;
-			this->button4->Text = L"Save Labelled Image";
+			this->button4->Text = L"Save Annotations";
 			this->button4->UseVisualStyleBackColor = true;
 			this->button4->Click += gcnew System::EventHandler(this, &MyForm::button4_Click);
 			// 
@@ -242,11 +245,21 @@ namespace Image_Annotator {
 			this->pictureBox2->TabIndex = 14;
 			this->pictureBox2->TabStop = false;
 			// 
+			// button5
+			// 
+			this->button5->Location = System::Drawing::Point(1133, 638);
+			this->button5->Name = L"button5";
+			this->button5->Size = System::Drawing::Size(75, 23);
+			this->button5->TabIndex = 15;
+			this->button5->Text = L"Save";
+			this->button5->UseVisualStyleBackColor = true;
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(1220, 681);
+			this->Controls->Add(this->button5);
 			this->Controls->Add(this->pictureBox2);
 			this->Controls->Add(this->listBox2);
 			this->Controls->Add(this->pictureBox1);
@@ -272,12 +285,13 @@ namespace Image_Annotator {
 		}
 #pragma endregion
 
-		void shapePoint1();
-		void shapePoint2();
-		void paintShapes(PaintEventArgs^ e);
-		void savePic();
-		void loadImages();
-		Point centerPointer(Point pos, bool isStart);
+	void shapePoint1();
+	void shapePoint2();
+	void paintShapes(PaintEventArgs^ e);
+	void savePic();
+	void loadImages();
+	void setImage();
+	Point centerPointer(Point pos, bool isStart);
 
 	private: System::Void pictureBox1_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
 		paintShapes(e);
@@ -303,7 +317,7 @@ namespace Image_Annotator {
 		loadImages();
 	}
 	private: System::Void listBox2_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
-		//Show selected image
+		setImage();
 	}
 
 	};
