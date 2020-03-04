@@ -22,6 +22,8 @@ void Main(array<String^>^ args) {
 Point shapeStartPos;
 Point picBoxLoc;
 std::vector<int> rectangles;
+std::vector <std::string> fileNames;
+std::string filePath;
 
 void MyForm::shapePoint1() {
 	timer1->Enabled = true;
@@ -87,9 +89,18 @@ void MyForm::loadImages() {
 	imageFolder imageFolder;
 	openFileDialog1->ShowDialog();
 	System::String^ filePathS = openFileDialog1->SelectedPath;
+	filePath = msclr::interop::marshal_as<std::string>(filePathS);
 	textBox1->Text = filePathS;
-	std::vector <std::string> fileNames = imageFolder.loadImages(msclr::interop::marshal_as<std::string>(filePathS));
+	fileNames = imageFolder.loadImages(filePath);
 	for (int i = 0; i < fileNames.size(); i++) {
 		listBox2->Items->Add(gcnew String(fileNames[i].c_str()));
 	}
+}
+
+void MyForm::setImage() {
+	imageFolder image;
+	int selectedImage = listBox2->SelectedIndex;
+	std::string fullPath = image.fullPath(filePath, fileNames[selectedImage]);
+	System::String^ fullPathS = gcnew String(fullPath.c_str());
+	pictureBox1->Image = pictureBox1->Image->FromFile(fullPathS);
 }

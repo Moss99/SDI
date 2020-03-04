@@ -35,3 +35,8 @@ bool imageFolder::validImage(std::string imageName) {
 	}
 	return valid;
 }
+
+std::string imageFolder::fullPath(std::string filePath, std::string fileName) {
+	std::string fullPath = filePath.append("\\" + fileName);
+	return fullPath;
+}

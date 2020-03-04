@@ -112,7 +112,7 @@ namespace Image_Annotator {
 			this->listBox1->Location = System::Drawing::Point(791, 511);
 			this->listBox1->Name = L"listBox1";
 			this->listBox1->ScrollAlwaysVisible = true;
-			this->listBox1->Size = System::Drawing::Size(416, 121);
+			this->listBox1->Size = System::Drawing::Size(417, 121);
 			this->listBox1->TabIndex = 1;
 			// 
 			// label1
@@ -153,14 +153,14 @@ namespace Image_Annotator {
 			// 
 			this->textBox1->Location = System::Drawing::Point(481, 640);
 			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(214, 20);
+			this->textBox1->Size = System::Drawing::Size(297, 20);
 			this->textBox1->TabIndex = 6;
 			// 
 			// textBox2
 			// 
 			this->textBox2->Location = System::Drawing::Point(916, 640);
 			this->textBox2->Name = L"textBox2";
-			this->textBox2->Size = System::Drawing::Size(214, 20);
+			this->textBox2->Size = System::Drawing::Size(292, 20);
 			this->textBox2->TabIndex = 7;
 			// 
 			// textBox3
@@ -272,11 +272,12 @@ namespace Image_Annotator {
 		}
 #pragma endregion
 
-		void shapePoint1();
-		void shapePoint2();
-		void paintShapes(PaintEventArgs^ e);
-		void savePic();
-		void loadImages();
+	void shapePoint1();
+	void shapePoint2();
+	void paintShapes(PaintEventArgs^ e);
+	void savePic();
+	void loadImages();
+	void setImage();
 
 	private: System::Void pictureBox1_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
 		paintShapes(e);
@@ -302,7 +303,7 @@ namespace Image_Annotator {
 		loadImages();
 	}
 	private: System::Void listBox2_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
-		//Show selected image
+		setImage();
 	}
 
 	};
