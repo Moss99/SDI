@@ -9,3 +9,4 @@
 #include "../Image Annotator/ImageFolder.h"
 #include <filesystem>
 #include <vector>
+#include <algorithm>

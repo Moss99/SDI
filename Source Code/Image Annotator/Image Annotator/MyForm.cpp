@@ -20,22 +20,18 @@ void Main(array<String^>^ args) {
 }
 
 Point shapeStartPos;
-Point picBoxLoc;
 std::vector<int> rectangles;
 
 void MyForm::shapePoint1() {
 	timer1->Enabled = true;
 	shapeStartPos = PointToClient(System::Windows::Forms::Cursor::Position);
-	picBoxLoc = pictureBox1->Location;
-	shapeStartPos.X -= picBoxLoc.X;
-	shapeStartPos.Y -= picBoxLoc.Y;;
+	shapeStartPos = centerPointer(shapeStartPos, true);
 }
 
 void MyForm::shapePoint2() {
 	timer1->Enabled = false;
 	Point shapeEndPos = PointToClient(System::Windows::Forms::Cursor::Position);
-	shapeEndPos.X -= picBoxLoc.X + shapeStartPos.X;
-	shapeEndPos.Y -= picBoxLoc.Y + shapeStartPos.Y;
+	shapeEndPos = centerPointer(shapeEndPos, false);
 	rectangles.push_back(shapeStartPos.X);
 	rectangles.push_back(shapeStartPos.Y);
 	rectangles.push_back(shapeEndPos.X);
@@ -58,13 +54,26 @@ void MyForm::paintShapes(PaintEventArgs^ e) {
 
 	if (Control::MouseButtons == System::Windows::Forms::MouseButtons::Left) {
 		Point shapeEndPos = PointToClient(System::Windows::Forms::Cursor::Position);
-		shapeEndPos.X -= picBoxLoc.X + shapeStartPos.X;
-		shapeEndPos.Y -= picBoxLoc.Y + shapeStartPos.Y;
+		shapeEndPos = centerPointer(shapeEndPos, false);
 		Drawing::Size CurRecSize = Drawing::Size(shapeEndPos);
 		currentRectangle = Drawing::Rectangle(shapeStartPos, CurRecSize);
 		g->FillRectangle(tYBrush, currentRectangle);
 		g->DrawRectangle(Pens::Yellow, currentRectangle);
 	}
+}
+
+Point MyForm::centerPointer(Point pos, bool isStart) {
+	Point picBoxLoc;
+	picBoxLoc = pictureBox1->Location;
+	if (isStart) {
+		pos.X -= picBoxLoc.X;
+		pos.Y -= picBoxLoc.Y;
+	}
+	else {
+		pos.X -= picBoxLoc.X + shapeStartPos.X;
+		pos.Y -= picBoxLoc.Y + shapeStartPos.Y;
+	}
+	return pos;
 }
 
 void Image_Annotator::MyForm::savePic() {
@@ -93,3 +102,5 @@ void MyForm::loadImages() {
 		listBox2->Items->Add(gcnew String(fileNames[i].c_str()));
 	}
 }
+
+

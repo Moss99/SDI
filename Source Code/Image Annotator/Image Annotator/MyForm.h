@@ -277,6 +277,7 @@ namespace Image_Annotator {
 		void paintShapes(PaintEventArgs^ e);
 		void savePic();
 		void loadImages();
+		Point centerPointer(Point pos, bool isStart);
 
 	private: System::Void pictureBox1_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
 		paintShapes(e);
