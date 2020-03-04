@@ -1,6 +1,0 @@
-﻿  MyForm.cpp
-c1xx : warning C4857: C++/CLI mode does not support C++ versions newer than C++17; setting language to /std:c++17
-C:\Users\terra\OneDrive - Nottingham Trent University\year 2\SDI\Source Code\Image Annotator\Image Annotator\MyForm.h(257,20): warning C4018: '<': signed/unsigned mismatch
-  imageFolder.obj : /DEBUG:FASTLINK is not supported when managed code is present; restarting link with /DEBUG:FULL
-  imageFolder.obj : MSIL module encountered; incremental linking is disabled for MSIL; performing full link
-  Image Annotator.vcxproj -> C:\Users\terra\OneDrive - Nottingham Trent University\year 2\SDI\Source Code\Image Annotator\Debug\Image Annotator.exe
