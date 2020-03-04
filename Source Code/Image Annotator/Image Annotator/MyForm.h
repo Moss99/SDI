@@ -56,6 +56,8 @@ namespace Image_Annotator {
 	private: System::ComponentModel::IContainer^ components;
 	private: System::Windows::Forms::FolderBrowserDialog^ openFileDialog1;
 	private: System::Windows::Forms::PictureBox^ pictureBox2;
+	private: System::Windows::Forms::Button^ button5;
+	private: System::Windows::Forms::Button^ button6;
 	private: System::Windows::Forms::ListBox^ listBox2;
 
 
@@ -93,6 +95,8 @@ namespace Image_Annotator {
 			this->openFileDialog1 = (gcnew System::Windows::Forms::FolderBrowserDialog());
 			this->listBox2 = (gcnew System::Windows::Forms::ListBox());
 			this->pictureBox2 = (gcnew System::Windows::Forms::PictureBox());
+			this->button5 = (gcnew System::Windows::Forms::Button());
+			this->button6 = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->BeginInit();
 			this->SuspendLayout();
@@ -158,16 +162,16 @@ namespace Image_Annotator {
 			// 
 			// textBox2
 			// 
-			this->textBox2->Location = System::Drawing::Point(916, 640);
+			this->textBox2->Location = System::Drawing::Point(918, 640);
 			this->textBox2->Name = L"textBox2";
-			this->textBox2->Size = System::Drawing::Size(292, 20);
+			this->textBox2->Size = System::Drawing::Size(211, 20);
 			this->textBox2->TabIndex = 7;
 			// 
 			// textBox3
 			// 
 			this->textBox3->Location = System::Drawing::Point(136, 582);
 			this->textBox3->Name = L"textBox3";
-			this->textBox3->Size = System::Drawing::Size(214, 20);
+			this->textBox3->Size = System::Drawing::Size(133, 20);
 			this->textBox3->TabIndex = 10;
 			// 
 			// button3
@@ -195,9 +199,9 @@ namespace Image_Annotator {
 			// 
 			this->button4->Location = System::Drawing::Point(11, 618);
 			this->button4->Name = L"button4";
-			this->button4->Size = System::Drawing::Size(191, 43);
+			this->button4->Size = System::Drawing::Size(339, 43);
 			this->button4->TabIndex = 11;
-			this->button4->Text = L"Save Labelled Image";
+			this->button4->Text = L"Save Annotationed Image";
 			this->button4->UseVisualStyleBackColor = true;
 			this->button4->Click += gcnew System::EventHandler(this, &MyForm::button4_Click);
 			// 
@@ -242,11 +246,31 @@ namespace Image_Annotator {
 			this->pictureBox2->TabIndex = 14;
 			this->pictureBox2->TabStop = false;
 			// 
+			// button5
+			// 
+			this->button5->Location = System::Drawing::Point(1133, 638);
+			this->button5->Name = L"button5";
+			this->button5->Size = System::Drawing::Size(75, 23);
+			this->button5->TabIndex = 15;
+			this->button5->Text = L"Save";
+			this->button5->UseVisualStyleBackColor = true;
+			// 
+			// button6
+			// 
+			this->button6->Location = System::Drawing::Point(275, 580);
+			this->button6->Name = L"button6";
+			this->button6->Size = System::Drawing::Size(75, 23);
+			this->button6->TabIndex = 16;
+			this->button6->Text = L"Save";
+			this->button6->UseVisualStyleBackColor = true;
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(1220, 681);
+			this->Controls->Add(this->button6);
+			this->Controls->Add(this->button5);
 			this->Controls->Add(this->pictureBox2);
 			this->Controls->Add(this->listBox2);
 			this->Controls->Add(this->pictureBox1);
