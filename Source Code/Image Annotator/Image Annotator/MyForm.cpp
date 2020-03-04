@@ -21,42 +21,49 @@ void Main(array<String^>^ args) {
 
 Point shapeStartPos;
 Point picBoxLoc;
-//std::vector<Drawing::Rectangle> rectangles;
-auto rectangles = gcnew List<System::Drawing::Rectangle>();
-
-
+std::vector<int> rectangles;
 
 void MyForm::shapePoint1() {
 	timer1->Enabled = true;
 	shapeStartPos = PointToClient(System::Windows::Forms::Cursor::Position);
 	picBoxLoc = pictureBox1->Location;
-	shapeStartPos.X = shapeStartPos.X - picBoxLoc.X;
-	shapeStartPos.Y = shapeStartPos.Y - picBoxLoc.Y;;
+	shapeStartPos.X -= picBoxLoc.X;
+	shapeStartPos.Y -= picBoxLoc.Y;;
 }
 
 void MyForm::shapePoint2() {
 	timer1->Enabled = false;
+	Point shapeEndPos = PointToClient(System::Windows::Forms::Cursor::Position);
+	shapeEndPos.X -= picBoxLoc.X + shapeStartPos.X;
+	shapeEndPos.Y -= picBoxLoc.Y + shapeStartPos.Y;
+	rectangles.push_back(shapeStartPos.X);
+	rectangles.push_back(shapeStartPos.Y);
+	rectangles.push_back(shapeEndPos.X);
+	rectangles.push_back(shapeEndPos.Y);
+	pictureBox1->Invalidate();
 }
 
 void MyForm::paintShapes(PaintEventArgs^ e) {
 	Graphics^ g = e->Graphics;
-
+	
 	Color transYellow = Color::FromArgb(100, Color::Yellow);
 	SolidBrush^ tYBrush = gcnew SolidBrush(transYellow);
-	/*
-	for (size_t i = 0; i < rectangles.size(); ++i) {
-		g->FillRectangle(tYBrush, rectangles[i]);
-		g->DrawRectangle(Pens::Yellow, rectangles[i]);
-	}*/
+	Drawing::Rectangle currentRectangle;
+
+	for (int i = 0; i < (static_cast<int>(rectangles.size()) - 3); i += 4) {
+		currentRectangle = Drawing::Rectangle(rectangles[i], rectangles[i+1], rectangles[i+2], rectangles[i+3]);
+		g->FillRectangle(tYBrush, currentRectangle);
+		g->DrawRectangle(Pens::Yellow, currentRectangle);
+	}
 
 	if (Control::MouseButtons == System::Windows::Forms::MouseButtons::Left) {
 		Point shapeEndPos = PointToClient(System::Windows::Forms::Cursor::Position);
-		shapeEndPos.X = shapeEndPos.X - picBoxLoc.X;
-		shapeEndPos.Y = shapeEndPos.Y - picBoxLoc.Y;
-		Drawing::Rectangle currentRectangle = Drawing::Rectangle(shapeStartPos.X, shapeStartPos.Y, shapeEndPos.X - shapeStartPos.X, shapeEndPos.Y - shapeStartPos.Y);
+		shapeEndPos.X -= picBoxLoc.X + shapeStartPos.X;
+		shapeEndPos.Y -= picBoxLoc.Y + shapeStartPos.Y;
+		Drawing::Size CurRecSize = Drawing::Size(shapeEndPos);
+		currentRectangle = Drawing::Rectangle(shapeStartPos, CurRecSize);
 		g->FillRectangle(tYBrush, currentRectangle);
 		g->DrawRectangle(Pens::Yellow, currentRectangle);
-		//rectangles.push_back(currentRectangle);
 	}
 }
 

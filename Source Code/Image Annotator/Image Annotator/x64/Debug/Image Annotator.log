@@ -1,9 +1,5 @@
 ﻿  MyForm.cpp
 c1xx : warning C4857: C++/CLI mode does not support C++ versions newer than C++17; setting language to /std:c++17
-  imageFolder.cpp
-c1xx : warning C4857: C++/CLI mode does not support C++ versions newer than C++17; setting language to /std:c++17
-C:\Users\terra\Documents\BackedUp\c++\SDI\Source Code\Image Annotator\Image Annotator\imageFolder.cpp(10,30): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  Generating Code...
-  imageFolder.obj : /DEBUG:FASTLINK is not supported when managed code is present; restarting link with /DEBUG:FULL
-  imageFolder.obj : MSIL module encountered; incremental linking is disabled for MSIL; performing full link
-  Image Annotator.vcxproj -> C:\Users\terra\Documents\BackedUp\c++\SDI\Source Code\Image Annotator\x64\Debug\Image Annotator.exe
+  ImageFolder.obj : /DEBUG:FASTLINK is not supported when managed code is present; restarting link with /DEBUG:FULL
+  ImageFolder.obj : MSIL module encountered; incremental linking is disabled for MSIL; performing full link
+  Image Annotator.vcxproj -> C:\Users\Sam\Desktop\SDI BACKUP\SDI\Source Code\Image Annotator\x64\Debug\Image Annotator.exe
