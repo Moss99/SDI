@@ -86,7 +86,6 @@ void Image_Annotator::MyForm::savePic() {
 }
 
 void MyForm::loadImages() {
-	listBox2->Items->Clear();
 	imageFolder imageFolder;
 	openFileDialog1->ShowDialog();
 	try {
@@ -94,6 +93,7 @@ void MyForm::loadImages() {
 		folderFilePath = msclr::interop::marshal_as<std::string>(filePathS);
 		textBox1->Text = filePathS;
 		imageFileNames = imageFolder.loadImages(folderFilePath);
+		listBox2->Items->Clear();
 		for (int i = 0; i < imageFileNames.size(); i++) {
 			listBox2->Items->Add(gcnew String(imageFileNames[i].c_str()));
 		}
