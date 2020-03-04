@@ -4,8 +4,9 @@ TEST(ImageFolderTest, LoadFile) { //First test
     imageFolder folder;
     std::string filePath = "C:\\Users\\Sam\\Desktop\\SDI Repo\\SDI\\Source Code\\images";
     std::vector<std::string> testFileNames; 
-    testFileNames.push_back("green-forest-trees.jpg.860x0_q70_crop-scale.jpg");
-    testFileNames.push_back("trees.jpg");
+    testFileNames.push_back("forest.jpg");
+    testFileNames.push_back("trees.jpg"); 
+    testFileNames.push_back("wp4676578.png");
     std::vector<std::string> actualFileNames = folder.loadImages(filePath);
 
     for (size_t i = 0; i < actualFileNames.size(); i++) {
