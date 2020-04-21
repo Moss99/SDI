@@ -24,6 +24,7 @@ Point shapeStartPos;
 std::vector<int> rectangles;
 std::vector <std::string> imageFileNames;
 std::string folderFilePath;
+std::string shapeSelected;
 
 void MyForm::shapePoint1() {
 	timer1->Enabled = true;
@@ -113,11 +114,23 @@ void MyForm::loadImages() {
 }
 
 void MyForm::setImage() {
+	rectangles.clear();
 	imageFolder image;
 	int selectedImage = listBox2->SelectedIndex;
 	std::string fullPath = image.fullPath(folderFilePath, imageFileNames[selectedImage]);
 	System::String^ fullPathS = gcnew String(fullPath.c_str());
+	if (pictureBox1->Image) {
+		delete pictureBox1->Image;  // Prevent memory leak
+	}
 	pictureBox1->Image = pictureBox1->Image->FromFile(fullPathS);
+}
+
+void MyForm::resetShapeSelection() {
+	delete selectSquare->Image;
+	selectSquare->Load("square.PNG");
+
+	delete selectPolygon->Image;
+	selectPolygon->Load("polygon.PNG");
 }
 
 
