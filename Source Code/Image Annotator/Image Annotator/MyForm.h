@@ -1,7 +1,6 @@
 #include <string>
 #include <msclr\marshal_cppstd.h>
 #include <vector>
-#include "imageFolder.h"
 #pragma once
 
 namespace Image_Annotator {
@@ -340,7 +339,7 @@ namespace Image_Annotator {
 	void shapePoint1();
 	void shapePoint2();
 	void paintShapes(PaintEventArgs^ e);
-	void savePic();
+	void saveAnnotations();
 	void loadImages();
 	void setImage();
 	void resetShapeSelection();
@@ -355,7 +354,7 @@ namespace Image_Annotator {
 	}
 
 	private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
-		savePic();
+		saveAnnotations();
 	}
 
 	private: System::Void pictureBox1_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {

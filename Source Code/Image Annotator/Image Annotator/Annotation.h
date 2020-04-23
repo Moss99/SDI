@@ -2,7 +2,7 @@
 #include "H5Cpp.h"
 #include <string>
 
-class annotation {
+class Annotation {
 public:
 	void save();
 };

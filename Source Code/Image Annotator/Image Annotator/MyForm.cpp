@@ -1,5 +1,7 @@
 #include "MyForm.h"
 #include "Shape.h"
+#include "imageFolder.h"
+#include "Annotation.h"
 #include <iostream>
 #include <vector>
 #include <initializer_list>
@@ -80,19 +82,21 @@ Point MyForm::centerPointer(Point pos, bool isStart) {
 	return pos;
 }
 
-void Image_Annotator::MyForm::savePic() {
-	saveFileDialog1->Filter = "JPeg Image|*.jpg|Bitmap Image|*.bmp";
-	saveFileDialog1->Title = "Save Image File";
-	saveFileDialog1->ShowDialog();
+void MyForm::saveAnnotations() {
+	Annotation annotation;
+	annotation.save();
+	//saveFileDialog1->Filter = "JPeg Image|*.jpg|Bitmap Image|*.bmp";
+	//saveFileDialog1->Title = "Save Image File";
+	//saveFileDialog1->ShowDialog();
 
-	if (saveFileDialog1->FileName != "") {
-		Bitmap^ bmp = gcnew Bitmap(pictureBox1->ClientSize.Width, pictureBox1->ClientSize.Height - 1);
-		pictureBox1->DrawToBitmap(bmp, pictureBox1->ClientRectangle);
+	//if (saveFileDialog1->FileName != "") {
+	//	Bitmap^ bmp = gcnew Bitmap(pictureBox1->ClientSize.Width, pictureBox1->ClientSize.Height - 1);
+	//	pictureBox1->DrawToBitmap(bmp, pictureBox1->ClientRectangle);
 
-		System::IO::FileStream^ fs = (System::IO::FileStream^)saveFileDialog1->OpenFile();
-		bmp->Save(fs, Drawing::Imaging::ImageFormat::Bmp);
-		fs->Close();
-	}
+	//	System::IO::FileStream^ fs = (System::IO::FileStream^)saveFileDialog1->OpenFile();
+	//	bmp->Save(fs, Drawing::Imaging::ImageFormat::Bmp);
+	//	fs->Close();
+	//}
 }
 
 void MyForm::loadImages() {
