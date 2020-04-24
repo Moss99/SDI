@@ -22,8 +22,9 @@ void Main(array<String^>^ args) {
 	Application::Run(% form);
 }
 
+const size_t size_dataset = 20;
 Point shapeStartPos;
-std::vector<int> rectangles;
+std::vector<int> rectangles(size_dataset);
 std::vector <std::string> imageFileNames;
 std::string folderFilePath;
 std::string shapeSelected;
@@ -85,7 +86,7 @@ Point MyForm::centerPointer(Point pos, bool isStart) {
 
 void MyForm::saveAnnotations() {
 	Annotation annotation;
-	annotation.save(imageFileNames[selectedImage]); //Crashes if images not loaded
+	annotation.save(rectangles); //Crashes if images not loaded
 
 	//this is not a needed feature:
 
