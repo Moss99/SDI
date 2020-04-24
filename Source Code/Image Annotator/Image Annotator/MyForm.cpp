@@ -7,6 +7,8 @@
 #include <initializer_list>
 #include <iostream>
 #include <exception>
+#include <thread>
+#include <chrono>
 
 using namespace System;
 using namespace System::Windows::Forms;
@@ -20,11 +22,11 @@ void Main(array<String^>^ args) {
 
 	Image_Annotator::MyForm form;
 	Application::Run(% form);
+	//std::thread t1(autosave());
 }
 
-const size_t size_dataset = 20;
 Point shapeStartPos;
-std::vector<int> rectangles(size_dataset);
+std::vector<int> rectangles;
 std::vector <std::string> imageFileNames;
 std::string folderFilePath;
 std::string shapeSelected;
@@ -86,22 +88,7 @@ Point MyForm::centerPointer(Point pos, bool isStart) {
 
 void MyForm::saveAnnotations() {
 	Annotation annotation;
-	annotation.save(rectangles); //Crashes if images not loaded
-
-	//this is not a needed feature:
-
-	//saveFileDialog1->Filter = "JPeg Image|*.jpg|Bitmap Image|*.bmp";
-	//saveFileDialog1->Title = "Save Image File";
-	//saveFileDialog1->ShowDialog();
-
-	//if (saveFileDialog1->FileName != "") {
-	//	Bitmap^ bmp = gcnew Bitmap(pictureBox1->ClientSize.Width, pictureBox1->ClientSize.Height - 1);
-	//	pictureBox1->DrawToBitmap(bmp, pictureBox1->ClientRectangle);
-
-	//	System::IO::FileStream^ fs = (System::IO::FileStream^)saveFileDialog1->OpenFile();
-	//	bmp->Save(fs, Drawing::Imaging::ImageFormat::Bmp);
-	//	fs->Close();
-	//}
+	annotation.save(rectangles);
 }
 
 void MyForm::loadImages() {
@@ -119,6 +106,20 @@ void MyForm::loadImages() {
 	}
 	catch (const std::exception & exp) {
 		//catch no folder selected
+	}
+}
+
+void MyForm::loadAnnotations() {
+	Annotation annotation;
+	openFileDialog2->ShowDialog();
+	try {
+		System::String^ filePathS = openFileDialog2->FileName;
+		std::string filePath = msclr::interop::marshal_as<std::string>(filePathS);
+		textBox3->Text = filePathS;
+		rectangles = annotation.open(filePath);
+	}
+	catch (const std::exception& exp) {
+		//catch no file selected
 	}
 }
 
@@ -142,3 +143,10 @@ void MyForm::resetShapeSelection() {
 	selectPolygon->Load("polygon.PNG");
 }
 
+void autosave() {
+	Annotation annotation;
+	while (true) {
+		annotation.save(rectangles);
+		std::this_thread::sleep_for(std::chrono::seconds(60));
+	}
+}

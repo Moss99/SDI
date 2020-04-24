@@ -26,6 +26,7 @@ namespace Image_Annotator {
 			//TODO: Add the constructor code here
 			//
 		}
+		
 	protected:
 		// Clean up any resources being used.
 		~MyForm()
@@ -59,6 +60,7 @@ namespace Image_Annotator {
 	private: System::Windows::Forms::PictureBox^ selectPolygon;
 	private: System::Windows::Forms::Label^ label4;
 	private: System::Windows::Forms::Label^ label5;
+	private: System::Windows::Forms::OpenFileDialog^ openFileDialog2;
 
 
 	private: System::Windows::Forms::ListBox^ listBox2;
@@ -102,6 +104,7 @@ namespace Image_Annotator {
 			this->selectPolygon = (gcnew System::Windows::Forms::PictureBox());
 			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->label5 = (gcnew System::Windows::Forms::Label());
+			this->openFileDialog2 = (gcnew System::Windows::Forms::OpenFileDialog());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->selectSquare))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->selectPolygon))->BeginInit();
@@ -188,6 +191,7 @@ namespace Image_Annotator {
 			this->button3->TabIndex = 9;
 			this->button3->Text = L"Browse";
 			this->button3->UseVisualStyleBackColor = true;
+			this->button3->Click += gcnew System::EventHandler(this, &MyForm::button3_Click);
 			// 
 			// label3
 			// 
@@ -300,6 +304,10 @@ namespace Image_Annotator {
 			this->label5->TabIndex = 18;
 			this->label5->Text = L"Rectangle";
 			// 
+			// openFileDialog2
+			// 
+			this->openFileDialog2->FileName = L"openFileDialog2";
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -342,6 +350,8 @@ namespace Image_Annotator {
 	void loadImages();
 	void setImage();
 	void resetShapeSelection();
+	void loadAnnotations();
+
 
 	Point centerPointer(Point pos, bool isStart);
 
@@ -383,6 +393,9 @@ namespace Image_Annotator {
 		resetShapeSelection();
 		delete selectPolygon->Image;
 		selectPolygon->Load("polygonSelected.png");
+	}
+	private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
+		loadAnnotations();
 	}
 };
 }

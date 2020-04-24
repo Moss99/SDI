@@ -4,6 +4,6 @@
 
 class Annotation {
 public:
-	void save(std::vector<int>);
-	void open(std::string);
+	void save(std::vector<int> &);
+	std::vector<int> open(std::string);
 };
