@@ -26,7 +26,6 @@ namespace Image_Annotator {
 			//TODO: Add the constructor code here
 			//
 		}
-
 	protected:
 		// Clean up any resources being used.
 		~MyForm()
@@ -343,6 +342,7 @@ namespace Image_Annotator {
 	void loadImages();
 	void setImage();
 	void resetShapeSelection();
+
 	Point centerPointer(Point pos, bool isStart);
 
 	private: System::Void pictureBox1_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {

@@ -27,6 +27,7 @@ std::vector<int> rectangles;
 std::vector <std::string> imageFileNames;
 std::string folderFilePath;
 std::string shapeSelected;
+int selectedImage;
 
 void MyForm::shapePoint1() {
 	timer1->Enabled = true;
@@ -84,7 +85,10 @@ Point MyForm::centerPointer(Point pos, bool isStart) {
 
 void MyForm::saveAnnotations() {
 	Annotation annotation;
-	annotation.save();
+	annotation.save(imageFileNames[selectedImage]); //Crashes if images not loaded
+
+	//this is not a needed feature:
+
 	//saveFileDialog1->Filter = "JPeg Image|*.jpg|Bitmap Image|*.bmp";
 	//saveFileDialog1->Title = "Save Image File";
 	//saveFileDialog1->ShowDialog();
@@ -120,7 +124,7 @@ void MyForm::loadImages() {
 void MyForm::setImage() {
 	rectangles.clear();
 	imageFolder image;
-	int selectedImage = listBox2->SelectedIndex;
+	selectedImage = listBox2->SelectedIndex;
 	std::string fullPath = image.fullPath(folderFilePath, imageFileNames[selectedImage]);
 	System::String^ fullPathS = gcnew String(fullPath.c_str());
 	if (pictureBox1->Image) {
@@ -136,5 +140,4 @@ void MyForm::resetShapeSelection() {
 	delete selectPolygon->Image;
 	selectPolygon->Load("polygon.PNG");
 }
-
 

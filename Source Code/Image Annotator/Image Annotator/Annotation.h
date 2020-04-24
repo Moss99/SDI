@@ -1,8 +1,8 @@
 #pragma once
-#include "H5Cpp.h"
 #include <string>
 
 class Annotation {
 public:
-	void save();
+	void save(std::string);
+	void open(std::string);
 };
