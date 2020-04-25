@@ -203,6 +203,7 @@
       <PreprocessorDefinitions>_DEBUG;H5_BUILT_AS_DYNAMIC_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>hdf5\include;C:\Users\Sam\Desktop\SDI Repo\SDI\Source Code\Image Annotator\packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1\build\native\include</AdditionalIncludeDirectories>
+      <CompileAsManaged>true</CompileAsManaged>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -289,11 +290,12 @@
     <ClCompile Include="MyForm.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug UnitTests|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Shape.cpp" />
+    <ClCompile Include="searchSort.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Annotation.h" />
     <ClInclude Include="ImageFolder.h" />
+    <ClInclude Include="linkedList.h" />
     <ClInclude Include="MyForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>

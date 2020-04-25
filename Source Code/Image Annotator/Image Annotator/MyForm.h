@@ -351,6 +351,7 @@ namespace Image_Annotator {
 	void setImage();
 	void resetShapeSelection();
 	void loadAnnotations();
+	bool freeDraw = false;
 
 
 	Point centerPointer(Point pos, bool isStart);
@@ -387,12 +388,14 @@ namespace Image_Annotator {
 		resetShapeSelection();
 		delete selectSquare->Image;
 		selectSquare->Load("squareSelected.png");
+		freeDraw = false;
 	}
 
 	private: System::Void selectPolygon_Click(System::Object^ sender, System::EventArgs^ e) {
 		resetShapeSelection();
 		delete selectPolygon->Image;
 		selectPolygon->Load("polygonSelected.png");
+		freeDraw = true;
 	}
 	private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
 		loadAnnotations();
