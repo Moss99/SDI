@@ -10,7 +10,7 @@ const std::string DATASET_NAME("dset");
 
 void Annotation::save(std::vector<std::vector<int>> &shapes) {
     std::vector<int> flat;
-    for (int x = 0; x < shapes.size(); x++) { //flattern out vector
+    for (int x = 0; x < shapes.size(); x++) { //flatten out vector
         for (int y = 0; y < shapes[x].size(); y++) {
             flat.push_back(shapes[x][y]);
         }
@@ -28,7 +28,7 @@ std::vector<std::vector<int>> Annotation::open(std::string path) {
     dataset.read(readData);
     std::vector<std::vector<int>> unflat;
     std::vector<int> points;
-    for (int i = 0; i < readData.size(); i++) { //un-flattern vector
+    for (int i = 0; i < readData.size(); i++) { //un-flatten vector
         if (readData[i] == -1) {
             unflat.push_back(points);
             points.clear();
