@@ -151,7 +151,7 @@ void MyForm::paintShapes(PaintEventArgs^ e) {
 	}
 
 	// Custom Polygon Preview
-	if (freeDraw) {
+	if (freeDraw && timer1->Enabled == true) {
 		for (int i = 0; i < static_cast<int>(polyDrawing.size()-3); i += 4) {
 			g->DrawLine(yellowPen, polyDrawing[i], polyDrawing[i+1], polyDrawing[i+2], polyDrawing[i+3]);
 		}
@@ -178,8 +178,10 @@ Point MyForm::centerPointer(Point pos, bool isStart) {
 }
 
 void MyForm::saveAnnotations() {
-	Annotation annotation;
-	annotation.save(shapes);
+	if (shapes.size() > 0) {
+		Annotation annotation;
+		annotation.save(shapes);
+	}
 }
 
 void MyForm::loadImages() {
