@@ -11,6 +11,7 @@ namespace Image_Annotator {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Threading;
 
 	/// <summary>
 	/// The Main screen used to annotate pictures.
@@ -61,6 +62,9 @@ namespace Image_Annotator {
 	private: System::Windows::Forms::Label^ label4;
 	private: System::Windows::Forms::Label^ label5;
 	private: System::Windows::Forms::OpenFileDialog^ openFileDialog2;
+	private: System::Windows::Forms::Button^ button6;
+	private: System::Windows::Forms::Label^ label6;
+	private: System::Windows::Forms::OpenFileDialog^ openFileDialog3;
 
 
 	private: System::Windows::Forms::ListBox^ listBox2;
@@ -105,6 +109,9 @@ namespace Image_Annotator {
 			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->openFileDialog2 = (gcnew System::Windows::Forms::OpenFileDialog());
+			this->button6 = (gcnew System::Windows::Forms::Button());
+			this->label6 = (gcnew System::Windows::Forms::Label());
+			this->openFileDialog3 = (gcnew System::Windows::Forms::OpenFileDialog());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->selectSquare))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->selectPolygon))->BeginInit();
@@ -112,12 +119,13 @@ namespace Image_Annotator {
 			// 
 			// button1
 			// 
-			this->button1->Location = System::Drawing::Point(957, 873);
+			this->button1->Location = System::Drawing::Point(953, 873);
 			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(75, 23);
+			this->button1->Size = System::Drawing::Size(94, 23);
 			this->button1->TabIndex = 0;
-			this->button1->Text = L"Browse";
+			this->button1->Text = L"Open Class File";
 			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Click += gcnew System::EventHandler(this, &MyForm::button1_Click);
 			// 
 			// listBox1
 			// 
@@ -127,6 +135,7 @@ namespace Image_Annotator {
 			this->listBox1->ScrollAlwaysVisible = true;
 			this->listBox1->Size = System::Drawing::Size(516, 121);
 			this->listBox1->TabIndex = 1;
+			this->listBox1->SelectedIndexChanged += gcnew System::EventHandler(this, &MyForm::listBox1_SelectedIndexChanged);
 			// 
 			// label1
 			// 
@@ -171,9 +180,9 @@ namespace Image_Annotator {
 			// 
 			// textBox2
 			// 
-			this->textBox2->Location = System::Drawing::Point(1038, 875);
+			this->textBox2->Location = System::Drawing::Point(1160, 875);
 			this->textBox2->Name = L"textBox2";
-			this->textBox2->Size = System::Drawing::Size(310, 20);
+			this->textBox2->Size = System::Drawing::Size(206, 20);
 			this->textBox2->TabIndex = 7;
 			// 
 			// textBox3
@@ -261,12 +270,13 @@ namespace Image_Annotator {
 			// 
 			// button5
 			// 
-			this->button5->Location = System::Drawing::Point(1354, 873);
+			this->button5->Location = System::Drawing::Point(1403, 873);
 			this->button5->Name = L"button5";
-			this->button5->Size = System::Drawing::Size(73, 23);
+			this->button5->Size = System::Drawing::Size(24, 23);
 			this->button5->TabIndex = 15;
-			this->button5->Text = L"Save";
+			this->button5->Text = L"+";
 			this->button5->UseVisualStyleBackColor = true;
+			this->button5->Click += gcnew System::EventHandler(this, &MyForm::button5_Click);
 			// 
 			// selectPolygon
 			// 
@@ -308,11 +318,39 @@ namespace Image_Annotator {
 			// 
 			this->openFileDialog2->FileName = L"openFileDialog2";
 			// 
+			// button6
+			// 
+			this->button6->Location = System::Drawing::Point(1372, 873);
+			this->button6->Name = L"button6";
+			this->button6->Size = System::Drawing::Size(24, 23);
+			this->button6->TabIndex = 19;
+			this->button6->Text = L"-";
+			this->button6->UseVisualStyleBackColor = true;
+			this->button6->Click += gcnew System::EventHandler(this, &MyForm::button6_Click);
+			// 
+			// label6
+			// 
+			this->label6->AutoSize = true;
+			this->label6->BackColor = System::Drawing::SystemColors::Control;
+			this->label6->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label6->Location = System::Drawing::Point(1056, 878);
+			this->label6->Name = L"label6";
+			this->label6->Size = System::Drawing::Size(102, 13);
+			this->label6->TabIndex = 20;
+			this->label6->Text = L"Add/Remove Class:";
+			// 
+			// openFileDialog3
+			// 
+			this->openFileDialog3->FileName = L"openFileDialog3";
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(1473, 910);
+			this->Controls->Add(this->label6);
+			this->Controls->Add(this->button6);
 			this->Controls->Add(this->label5);
 			this->Controls->Add(this->label4);
 			this->Controls->Add(this->selectPolygon);
@@ -351,6 +389,10 @@ namespace Image_Annotator {
 	void setImage();
 	void resetShapeSelection();
 	void loadAnnotations();
+	void openClass();
+	void addClass();
+	void removeClass();
+	void changeSelectedClass();
 	bool freeDraw = false;
 
 
@@ -399,6 +441,20 @@ namespace Image_Annotator {
 	}
 	private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
 		loadAnnotations();
+	}
+	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
+		openClass();
+	}
+	private: System::Void button5_Click(System::Object^ sender, System::EventArgs^ e) {
+		addClass();
+		textBox2->Clear();
+	}
+	private: System::Void button6_Click(System::Object^ sender, System::EventArgs^ e) {
+		removeClass();
+		textBox2->Clear();
+	}
+	private: System::Void listBox1_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
+		changeSelectedClass();
 	}
 };
 }

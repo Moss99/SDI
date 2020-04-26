@@ -3,37 +3,40 @@
 #include "imageFolder.h"
 #include "Annotation.h"
 #include "linkedList.h"
+#include "searchSort.h";
 #include <iostream>
 #include <vector>
 #include <initializer_list>
-#include <iostream>
 #include <exception>
 #include <thread>
 #include <chrono>
+#include <fstream>
 
 using namespace System;
 using namespace System::Windows::Forms;
 using namespace Image_Annotator;
 using namespace System::Collections::Generic;
 
-[STAThread]
-void Main(array<String^>^ args) {
-	Application::EnableVisualStyles();
-	Application::SetCompatibleTextRenderingDefault(false);
-
-	Image_Annotator::MyForm form;
-	Application::Run(% form);
-	//std::thread t1(autosave());
-}
-
-Point shapeStartPos = Point(0,0);
+Point shapeStartPos = Point(0, 0);
 std::vector<std::vector<int>> shapes;
+linkedList<std::string> classTexts;
+linkedList<Point> classPoints;
 std::vector<int> polyDrawing;
 Drawing::Rectangle polyStart;
 std::vector <std::string> imageFileNames;
-std::string folderFilePath;
+std::string folderFilePath = "";
+std::string classPath;
+std::string classSelected;
 std::string shapeSelected;
 int selectedImage;
+
+void autosave() {
+	Annotation annotation;
+	while (true) {
+		annotation.save(shapes);
+		std::this_thread::sleep_for(std::chrono::seconds(60));
+	}
+}
 
 void MyForm::shapePoint1() {
 
@@ -52,6 +55,10 @@ void MyForm::shapePoint1() {
 			shapes.push_back(polyDrawing);
 			polyDrawing.clear();
 			polyStart = Drawing::Rectangle();
+
+			classTexts.addBack(classSelected);
+			classPoints.addBack(Point(lineEndPos.X, lineEndPos.Y - 20));
+
 			timer1->Enabled = false;
 		}
 		else {
@@ -80,6 +87,9 @@ void MyForm::shapePoint2() {
 		std::vector<int> currShape = { shapeStartPos.X, shapeStartPos.Y, shapeEndPos.X, shapeEndPos.Y };
 		shapes.push_back(currShape);
 
+		classTexts.addBack(classSelected);
+		classPoints.addBack(Point(shapeStartPos.X, shapeStartPos.Y-20));
+
 		pictureBox1->Invalidate();
 	}
 }
@@ -89,6 +99,10 @@ void MyForm::paintShapes(PaintEventArgs^ e) {
 	
 	Color transYellow = Color::FromArgb(100, Color::Yellow);
 	SolidBrush^ tYBrush = gcnew SolidBrush(transYellow);
+	Pen^ yellowPen = gcnew Pen(Brushes::Yellow);
+	yellowPen->Width = 3.0F;
+	yellowPen->LineJoin = System::Drawing::Drawing2D::LineJoin::Bevel;
+
 	Drawing::Rectangle currentRectangle;
 
 	// Draw Shapes
@@ -106,14 +120,24 @@ void MyForm::paintShapes(PaintEventArgs^ e) {
 			Drawing::Drawing2D::GraphicsPath^ path = gcnew Drawing::Drawing2D::GraphicsPath();
 			path->AddPolygon(polyPoints);
 			Drawing::Region^ region = gcnew Drawing::Region(path);
-			g->FillRegion(tYBrush, region);
-			g->DrawPath(Pens::Yellow, path);
+			//g->FillRegion(tYBrush, region);
+			g->DrawPath(yellowPen, path);
 		}
 		else {
 			currentRectangle = Drawing::Rectangle(shape[0], shape[1], shape[2], shape[3]);
-			g->FillRectangle(tYBrush, currentRectangle);
-			g->DrawRectangle(Pens::Yellow, currentRectangle);
+			//g->FillRectangle(tYBrush, currentRectangle);
+			g->DrawRectangle(yellowPen, currentRectangle);
 		}
+	}
+
+
+	// Draw Class Names
+	for (int i = 0; i < static_cast<int>(classTexts.size()); i++) {
+		FontFamily^ fontFamily = gcnew FontFamily("Arial");
+		Drawing::Font^ font = gcnew Drawing::Font(fontFamily, 15, Drawing::FontStyle::Bold, Drawing::GraphicsUnit::Pixel);
+		SolidBrush^ solidBrush = gcnew SolidBrush(Color::FromArgb(255, 255, 255, 0));
+
+		g->DrawString(gcnew String(classTexts.get(i).c_str()), font, solidBrush, Drawing::Rectangle(classPoints.get(i), Drawing::Size(200, 20)));
 	}
 
 	// Rectangle Preview
@@ -123,17 +147,17 @@ void MyForm::paintShapes(PaintEventArgs^ e) {
 		Drawing::Size CurRecSize = Drawing::Size(shapeEndPos);
 		currentRectangle = Drawing::Rectangle(shapeStartPos, CurRecSize);
 		g->FillRectangle(tYBrush, currentRectangle);
-		g->DrawRectangle(Pens::Yellow, currentRectangle);
+		g->DrawRectangle(yellowPen, currentRectangle);
 	}
 
 	// Custom Polygon Preview
 	if (freeDraw) {
 		for (int i = 0; i < static_cast<int>(polyDrawing.size()-3); i += 4) {
-			g->DrawLine(Pens::Yellow, polyDrawing[i], polyDrawing[i+1], polyDrawing[i+2], polyDrawing[i+3]);
+			g->DrawLine(yellowPen, polyDrawing[i], polyDrawing[i+1], polyDrawing[i+2], polyDrawing[i+3]);
 		}
 		Point lineEndPos = PointToClient(System::Windows::Forms::Cursor::Position);
 		lineEndPos = centerPointer(lineEndPos, true);
-		g->DrawLine(Pens::Yellow, shapeStartPos.X, shapeStartPos.Y, lineEndPos.X, lineEndPos.Y);
+		g->DrawLine(yellowPen, shapeStartPos.X, shapeStartPos.Y, lineEndPos.X, lineEndPos.Y);
 		g->DrawRectangle(Pens::Green, polyStart);
 
 	}
@@ -183,6 +207,8 @@ void MyForm::loadAnnotations() {
 		System::String^ filePathS = openFileDialog2->FileName;
 		std::string filePath = msclr::interop::marshal_as<std::string>(filePathS);
 		textBox3->Text = filePathS;
+		classTexts.clear();
+		classPoints.clear();
 		shapes = annotation.open(filePath);
 		pictureBox1->Invalidate();
 	}
@@ -193,6 +219,9 @@ void MyForm::loadAnnotations() {
 
 void MyForm::setImage() {
 	shapes.clear();
+	classTexts.clear();
+	classPoints.clear();
+
 	imageFolder image;
 	selectedImage = listBox2->SelectedIndex;
 	std::string fullPath = image.fullPath(folderFilePath, imageFileNames[selectedImage]);
@@ -211,22 +240,97 @@ void MyForm::resetShapeSelection() {
 	selectPolygon->Load("polygon.PNG");
 }
 
-void autosave() {
-	Annotation annotation;
-	while (true) {
-		annotation.save(shapes);
-		std::this_thread::sleep_for(std::chrono::seconds(60));
+void MyForm::openClass() {
+	openFileDialog3->Filter = "class files (*.names)|*.names|txt files (*.txt)|*.txt";
+	
+	if (openFileDialog3->ShowDialog() == System::Windows::Forms::DialogResult::OK) {
+		try {
+			System::String^ filePathS = openFileDialog3->FileName;
+			classPath = msclr::interop::marshal_as<std::string>(filePathS);
+			listBox1->Items->Clear();
+
+			std::string currClass;
+			std::ifstream infile;
+			infile.open(classPath);
+			while (!infile.eof()) // get all lines.
+			{
+				getline(infile, currClass); // Saves the line in currClass.
+				listBox1->Items->Add(gcnew String(currClass.c_str()));
+			}
+			infile.close();
+		}
+		catch (const std::exception & exp) {
+			//catch no file selected
+		}
 	}
 }
 
+void MyForm::addClass() {
+	if (classPath != "" && !textBox2->Text->IsNullOrEmpty(textBox2->Text)) {
+		std::ofstream myfile;
+		myfile.open(classPath, std::ofstream::out | std::ofstream::app);
 
-//linkedList<std::string> testList;
-//testList.addBack("a");
-//testList.addBack("b");
-//testList.addBack("c ");
-//
-//std::string tmp = "";
-//for (int i = 0; i < testList.size(); i++) {
-//	System::String^ out = gcnew String(testList.get(i).c_str());
-//	textBox1->Text += out;
-//}
+		std::string className = msclr::interop::marshal_as<std::string>(textBox2->Text);
+		myfile << "\n" + className;
+		listBox1->Items->Add(textBox2->Text);
+
+		myfile.close();
+	}
+}
+
+void MyForm::removeClass() {
+	if (classPath != "" && (!textBox2->Text->IsNullOrEmpty(textBox2->Text) || listBox1->SelectedItem->ToString() != nullptr)) {
+
+		std::string removeClass;
+		if (textBox2->Text->IsNullOrEmpty(textBox2->Text)) {
+			removeClass = msclr::interop::marshal_as<std::string>(listBox1->SelectedItem->ToString());
+		}
+		else {
+			removeClass = msclr::interop::marshal_as<std::string>(textBox2->Text);
+		}
+
+		listBox1->Items->Clear();
+		std::string currClass;
+		linkedList<std::string> allClasses;
+		std::ifstream infile;
+		infile.open(classPath);
+		while (!infile.eof()) // get all lines.
+		{
+			getline(infile, currClass); // Saves the line in currClass.
+			if (currClass != removeClass) {
+				allClasses.addBack(currClass);
+				listBox1->Items->Add(gcnew String(currClass.c_str()));
+			}
+		}
+		infile.close();
+
+		std::ofstream myfile;
+		myfile.open(classPath, std::ofstream::out | std::ofstream::trunc);
+
+		for (int i = 0; i < allClasses.size(); i++) {
+			if (i != allClasses.size() - 1) {
+				myfile << allClasses.get(i) + "\n";
+			}
+			else {
+				myfile << allClasses.get(i);
+			}
+		}
+
+		myfile.close();
+	}
+}
+
+void MyForm::changeSelectedClass() {
+	classSelected = msclr::interop::marshal_as<std::string>(listBox1->SelectedItem->ToString());
+}
+
+
+[STAThread]
+void Main(array<String^>^ args) {
+	Application::EnableVisualStyles();
+	Application::SetCompatibleTextRenderingDefault(false);
+
+	Image_Annotator::MyForm form;
+	Application::Run(% form);
+	//std::thread th1(autosave);
+}

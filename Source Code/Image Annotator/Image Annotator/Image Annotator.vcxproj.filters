@@ -24,9 +24,6 @@
     <ClCompile Include="Annotation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="searchSort.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MyForm.h">
@@ -42,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="linkedList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="searchSort.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

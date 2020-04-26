@@ -290,7 +290,6 @@
     <ClCompile Include="MyForm.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug UnitTests|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="searchSort.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Annotation.h" />
@@ -299,6 +298,7 @@
     <ClInclude Include="MyForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="searchSort.h" />
     <ClInclude Include="Shape.h" />
   </ItemGroup>
   <ItemGroup>
