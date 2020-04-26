@@ -19,6 +19,7 @@ public:
     void addBack(T n);
     void addFront(T n);
     void addAfterNode(node<T>* a, T n);
+    void clear();
     T get(unsigned int n);
     int size();
     std::string print();
@@ -68,6 +69,24 @@ inline void linkedList<T>::addAfterNode(node<T>* a, T n) {
     a->next = p;
     length++;
 }
+
+template<class T>
+inline void linkedList<T>::clear() {
+    
+    node<T>* current = head;
+    node<T>* next;
+
+    while (current != nullptr)
+    {
+        next = current->next;
+        free(current);
+        current = next;
+    }
+
+    head = nullptr;
+    length = 0;
+}  
+
 
 template<class T>
 inline T linkedList<T>::get(unsigned int n) {
