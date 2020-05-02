@@ -21,6 +21,7 @@ public:
     void addAfterNode(node<T>* a, T n);
     void clear();
     T get(unsigned int n);
+	node<T>* getNode(unsigned int n);
     int size();
     std::string print();
 };
@@ -46,6 +47,7 @@ inline void linkedList<T>::addBack(T n) {
     }
     else
     {
+		//tail = tmp;
         tail->next = tmp;
         tail = tail->next;
     }
@@ -58,6 +60,8 @@ inline void linkedList<T>::addFront(T n) {
     tmp->data = n;
     tmp->next = head;
     head = tmp;
+	if (tail == nullptr)
+		tail = head;
     length++;
 }
 
@@ -105,6 +109,22 @@ inline T linkedList<T>::get(unsigned int n) {
 }
 
 template<class T>
+inline node<T>* linkedList<T>::getNode(unsigned int n) {
+	node<T>* current = head;
+
+	int count = 0;
+	while (current != nullptr)
+	{
+		if (count == n)
+			return(current);
+		count++;
+		current = current->next;
+	}
+
+	assert(0);
+}
+
+template<class T>
 inline int linkedList<T>::size() {
     return length;
 }
@@ -116,8 +136,12 @@ inline std::string linkedList<T>::print() {
     tmp = head;
     while (tmp != nullptr)
     {
-        out += tmp->data;
+        //out += tmp->data;
+
+		out += std::to_string(tmp->data);
+		//std::cout << out;
         tmp = tmp->next;
     }
+	
     return out;
 }
